@@ -1,0 +1,36 @@
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  terraform-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v2
+
+    - name: Authenticate to Azure
+      uses: azure/login@v3
+      with:
+        client-id:        ${{ secrets.AZURE_APP_REG }}
+        tenant-id:        ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id:  ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Run Terraform Init command
+      run: terraform init
+
+    - name: Run Terraform plan command
+      run: terraform run
+
+    - name: Run Terraform apply command
+      run: terraform apply -auto-approve
+      
+    - name: Commit Terraform State File
+      uses: stefanzweifel/git-auto-commit-action@v7
+      with: 
+        commit_message: Updating Terraform state file
+        file_pattern: 'terraform.tfstate'
