@@ -1,0 +1,17 @@
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  azuread:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login to Microsoft Azure
+      uses: azure/login@v3
+      with:
+        client-id: ${{ secrets.AZURE_APP_REG }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
