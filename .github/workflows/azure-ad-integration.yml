@@ -1,0 +1,13 @@
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  azuread:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login to Microsoft Azure
+      shell: pwsh
+      run: |
+        az login --service-principal --tenant ${{ secrets.AZURE_TENANT_ID }} --username ${{ secrets.AZURE_APP_REG }} --password ${{ secrets.AZURE_CLIENT_SECRET }}
+      
